@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:netflix_clone/api/api.dart';
 import 'package:netflix_clone/model/movies.dart';
-import 'package:netflix_clone/widgets/watch.dart';
+import 'package:netflix_clone/widgets/searched_movies.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -16,7 +16,7 @@ class _SearchScreenState extends State<SearchScreen> {
   late Future<List<Movie>> trendingMovies;
   List<Movie> _filteredMovies = [];
   Timer? _debounce;
-  bool _isSearching = false; // Added flag to track search state
+  bool _isSearching = false;
 
   @override
   void initState() {
@@ -36,7 +36,7 @@ class _SearchScreenState extends State<SearchScreen> {
   _onSearchChanged() {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     setState(() {
-      _isSearching = true; // Set searching to true
+      _isSearching = true; 
     });
     _debounce = Timer(const Duration(milliseconds: 500), () {
       if (_searchController.text.isNotEmpty) {
@@ -44,7 +44,7 @@ class _SearchScreenState extends State<SearchScreen> {
       } else {
         setState(() {
           _filteredMovies = [];
-          _isSearching = false; // Reset searching state
+          _isSearching = false; 
         });
       }
     });
@@ -58,7 +58,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
     setState(() {
       _filteredMovies = filtered;
-      _isSearching = false; // Reset searching state
+      _isSearching = false; 
     });
   }
 
@@ -75,15 +75,11 @@ class _SearchScreenState extends State<SearchScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.cast, color: Colors.white),
-            onPressed: () {
-              // Implement cast functionality here
-            },
+            onPressed: () {},
           ),
           IconButton(
             icon: const Icon(Icons.account_circle, color: Colors.white),
-            onPressed: () {
-              // Implement profile functionality here
-            },
+            onPressed: () {},
           ),
         ],
       ),
@@ -93,7 +89,6 @@ class _SearchScreenState extends State<SearchScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Search Bar
               TextField(
                 controller: _searchController,
                 style: const TextStyle(color: Colors.white),
@@ -112,43 +107,12 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               const SizedBox(height: 20),
 
-              // Display Loading Indicator if searching
               if (_isSearching)
                 const Center(
                     child: CircularProgressIndicator(color: Colors.white))
               else
-                // Display Search Results
                 _filteredMovies.isNotEmpty
-                    ? Column(
-                        children: _filteredMovies.map((movie) {
-                          return ListTile(
-                              title: Text(movie.title,
-                                  style: const TextStyle(color: Colors.white)),
-                              subtitle: Text(movie.releaseDate,
-                                  style:
-                                      const TextStyle(color: Colors.white70)),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (ctx) => Watch(
-                                      movieName: movie.title,
-                                      description: movie.overView,
-                                      posterPath:
-                                          'https://image.tmdb.org/t/p/w500${movie.posterPath}',
-                                      genres: 'Comedy . Romance',
-                                      rating: movie.voteAvarage,
-                                      releaseYear:
-                                          movie.releaseDate.split('-')[0],
-                                      duration:
-                                          '139', // Add the correct duration
-                                    ),
-                                  ),
-                                );
-                                ;
-                              });
-                        }).toList(),
-                      )
+                    ? SearchedMovies(filteredMovies: _filteredMovies)
                     : _searchController.text.isNotEmpty
                         ? const Center(
                             child: Text(
@@ -160,7 +124,6 @@ class _SearchScreenState extends State<SearchScreen> {
 
               const SizedBox(height: 20),
 
-              // Genres Section
               const Text(
                 'Genres',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -191,7 +154,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     backgroundColor: Colors.grey[800],
                   ),
                   onPressed: () {
-                    // Implement see more functionality here
+              
                   },
                   child: const Text(
                     'See more',
@@ -218,9 +181,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey[800],
                   ),
-                  onPressed: () {
-                    // Implement see more functionality here
-                  },
+                  onPressed: () {},
                   child: const Text(
                     'See more',
                     style: TextStyle(color: Colors.white),
@@ -237,28 +198,23 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  // Helper method to build genre buttons
   Widget _buildGenreButton(String genre) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color.fromARGB(255, 36, 40, 59),
       ),
-      onPressed: () {
-        // Handle genre tap
-      },
+      onPressed: () {},
       child: Text(genre, style: const TextStyle(color: Colors.white)),
     );
   }
 
-  // Helper method to build featured collections
   Widget _buildFeaturedCollection(String language) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 0),
       title: Text(language, style: const TextStyle(color: Colors.white)),
       trailing: const Icon(Icons.arrow_forward_ios, color: Colors.white),
-      onTap: () {
-        // Handle collection tap
-      },
+      onTap: () {},
     );
   }
 }
+

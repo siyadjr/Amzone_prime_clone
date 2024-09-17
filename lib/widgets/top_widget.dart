@@ -1,49 +1,15 @@
-import 'dart:async'; // Import the timer package
 import 'package:flutter/material.dart';
 import 'package:netflix_clone/model/movies.dart';
 import 'package:netflix_clone/widgets/suggested_movies.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
-class TopWidget extends StatefulWidget {
+class TopWidget extends StatelessWidget {
   final List<Movie> trendingMovies;
+
   TopWidget({
     required this.trendingMovies,
     super.key,
   });
-
-  @override
-  State<TopWidget> createState() => _TopWidgetState();
-}
-
-class _TopWidgetState extends State<TopWidget> {
-  late PageController _pageController;
-  late Timer _timer;
-  int _currentPage = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController(viewportFraction: 1.0);
-
-    _timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
-      if (_currentPage < widget.trendingMovies.length - 1) {
-        _currentPage++;
-      } else {
-        _currentPage = 0;
-      }
-      _pageController.animateToPage(
-        _currentPage,
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeInOut,
-      );
-    });
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    _pageController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,9 +33,7 @@ class _TopWidgetState extends State<TopWidget> {
                     Icons.cast,
                     color: Color.fromARGB(255, 153, 152, 152),
                   ),
-                  SizedBox(
-                    width: 18,
-                  ),
+                  SizedBox(width: 18),
                   CircleAvatar(
                     backgroundColor: Color.fromARGB(255, 60, 103, 138),
                     child: Icon(
@@ -86,9 +50,7 @@ class _TopWidgetState extends State<TopWidget> {
           color: Colors.black,
           child: Row(
             children: [
-              const SizedBox(
-                width: 10,
-              ),
+              const SizedBox(width: 10),
               OutlinedButton(
                 onPressed: () {},
                 style: OutlinedButton.styleFrom(
@@ -99,26 +61,22 @@ class _TopWidgetState extends State<TopWidget> {
                   style: TextStyle(color: Colors.white),
                 ),
               ),
-              const SizedBox(
-                width: 5,
-              ),
+              const SizedBox(width: 5),
               OutlinedButton(
                 onPressed: () {},
                 style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: Colors.grey), // White border
+                  side: const BorderSide(color: Colors.grey),
                 ),
                 child: const Text(
                   'TV shows',
                   style: TextStyle(color: Colors.white),
                 ),
               ),
-              const SizedBox(
-                width: 5,
-              ),
+              const SizedBox(width: 5),
               OutlinedButton(
                 onPressed: () {},
                 style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: Colors.grey), // White border
+                  side: const BorderSide(color: Colors.grey),
                 ),
                 child: const Text(
                   'Live TV',
@@ -131,15 +89,23 @@ class _TopWidgetState extends State<TopWidget> {
         const SizedBox(height: 20),
         SizedBox(
           height: 260,
-          child: PageView.builder(
-            itemCount: widget.trendingMovies.length,
-            controller: _pageController,
-            itemBuilder: (context, index) {
+          child: CarouselSlider.builder(
+            itemCount: trendingMovies.length,
+            itemBuilder: (context, index, realIndex) {
               return SuggestedMoviesCard(
                 index: index,
-                movie: widget.trendingMovies[index], // Correct casting
+                movie: trendingMovies[index],
               );
             },
+            options: CarouselOptions(
+              autoPlay: true,
+              enlargeCenterPage: true,
+              viewportFraction: 1.0,
+              aspectRatio: 16 / 9,
+              autoPlayInterval: const Duration(seconds: 3),
+              autoPlayAnimationDuration: const Duration(milliseconds: 800),
+              autoPlayCurve: Curves.fastOutSlowIn,
+            ),
           ),
         ),
       ],

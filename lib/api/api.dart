@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:math';
 
-import 'package:flutter/material.dart';
 import 'package:netflix_clone/model/movies.dart';
 import 'package:netflix_clone/widgets/constant.dart';
 import 'package:http/http.dart' as http;
@@ -13,7 +11,7 @@ class Api {
       'https://api.themoviedb.org/3/movie/upcoming?api_key=${Constant.apikey}';
 
   Future<List<Movie>> getPopularMovie() async {
-    final response = await http.get(Uri.parse(_trendingMoviesurl));
+    final response = await http.get(Uri.parse(_popularMovies));
     if (response.statusCode == 200) {
       final decodeData = json.decode(response.body)['results'] as List;
       return decodeData.map((movie) => Movie.fromJson(movie)).toList();
@@ -40,6 +38,16 @@ class Api {
       return decodeData.map((movie) => Movie.fromJson(movie)).toList();
     } else {
       throw Exception('somthing happend');
+    }
+  }
+
+  Future<List<Movie>> getData() async {
+    final response = await http.get(Uri.parse(_trendingMoviesurl));
+    if (response.statusCode == 200) {
+      final decodeData = json.decode(response.body)['results'] as List;
+      return decodeData.map((movie) => Movie.fromJson(movie)).toList();
+    }else{
+ throw Exception('error');
     }
   }
 }

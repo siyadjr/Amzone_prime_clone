@@ -49,9 +49,9 @@ class _WatchInLanguageState extends State<WatchInLanguage> {
           ),
         ),
         SizedBox(
-          height: 200, // Adjust the height as needed
+          height: 200, 
           child: FutureBuilder<List<Movie>>(
-            future: trendingMovies, // Use the future
+            future: trendingMovies, 
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
